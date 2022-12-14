@@ -1,33 +1,44 @@
 from typing import List
 
-n = int(input())
-street = list(map(int, input().split()))
+
+def read_input() -> List[int]:
+    _ = input()
+    street_map = list(map(int, input().split()))
+    return street_map
 
 
-def calc_distances(street: List[int], n: int) -> List[int]:
-    ans = [0] * n
+def calc_distances(street_map: List[int]) -> List[int]:
+    ans = [0] * len(street_map)
     max_distance = 10**9
-    for fwd in range(n):
-        if street[fwd] != 0:
-            distance = abs(max_distance - fwd)
-            if ans[fwd] > distance or ans[fwd] == 0:
-                ans[fwd] = distance
+    for forward in range(len(street_map)):
+        if street[forward] != 0:  # comment at the end of file
+            distance = abs(max_distance - forward)
+            if ans[forward] > distance or ans[forward] == 0:
+                ans[forward] = distance
         else:
-            max_distance = fwd
+            max_distance = forward
 
     max_distance = 10**9
-    for bkwd in range(n - 1, -1, -1):
-        if street[bkwd] != 0:
-            distance = abs(max_distance - bkwd)
-            if ans[bkwd] > distance or ans[bkwd] == 0:
-                ans[bkwd] = distance
+    for backward in range(len(street_map) - 1, -1, -1):
+        if street[backward] != 0:
+            distance = abs(max_distance - backward)
+            if ans[backward] > distance or ans[backward] == 0:
+                ans[backward] = distance
         else:
-            max_distance = bkwd
-
+            max_distance = backward
     return ans
 
 
-print(' '.join(map(str, calc_distances(street, n))))
+if __name__ == "__main__":
+    street = read_input()
+    print(" ".join(map(str, calc_distances(street))))
+
 # time complexity O(n**2)
 # space complexity O(n)
-# ID = 79290026
+# ID = 79442850
+
+# если не конвертить массив на входе, то строка с расстоянием будет другой
+# distance = str(abs(int(max_distance) - int(forward))
+# получится, что в худшем случае (один ноль на улице)
+# я буду конвертить n - 1 чисел 2 раза при каждом проходе
+# или я что-то не понимаю?
