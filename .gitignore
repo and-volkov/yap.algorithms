@@ -4,3 +4,8 @@
 
 /venv
 *.zip
+
+run.json
+.fleet
+
+*.txt
