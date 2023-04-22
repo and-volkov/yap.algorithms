@@ -1,18 +1,25 @@
+import operator
 from typing import List, Union
 
 
 class Stack:
     def __init__(self):
         self.stack: list = []
+        self.operations = {
+            "+": operator.add,
+            "-": operator.sub,
+            "*": operator.mul,
+            "/": operator.floordiv
+        }
 
     def push(self, value: int) -> None:
         self.stack.append(value)
 
     def pop(self) -> Union[int, None]:
-        if self.stack:
+        try:
             return self.stack.pop()
-        else:
-            return None
+        except IndexError:  # Здесь можно сразу поймать ее так?
+            pass
 
     def peek(self) -> Union[int, None]:
         if self.stack:
@@ -30,14 +37,7 @@ class Stack:
         if self.size() >= 2:
             a = self.pop()
             b = self.pop()
-            if operation == '+':
-                self.push(a + b)
-            elif operation == '-':
-                self.push(b - a)
-            elif operation == '*':
-                self.push(a * b)
-            elif operation == '/':
-                self.push(b // a)
+            self.push(self.operations[operation](b, a))
         else:
             print("error")
 

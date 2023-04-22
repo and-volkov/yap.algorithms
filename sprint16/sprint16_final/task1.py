@@ -1,6 +1,12 @@
 from typing import List, Union
 
 
+class DeqError(Exception):
+    def __init__(self, message="error"):
+        self.message = message
+        super().__init__(self.message)
+
+
 class DequeSized:
     def __init__(self, max_size: int):
         self.dequeue: List[Union[int, None]] = [None] * max_size
@@ -10,26 +16,28 @@ class DequeSized:
         self.size: int = 0
 
     def _is_empty(self) -> bool:
-        return self.size == 0
+        if self.size != 0:
+            return False
+        else:
+            raise DeqError
 
     def _is_not_max_sized(self) -> bool:
-        return self.size != self.max_size
+        if self.size != self.max_size:
+            return True
+        else:
+            raise DeqError
 
     def push_front(self, x: Union[int, None]) -> None:
         if self._is_not_max_sized():
             self.dequeue[(self.head - 1) % self.max_size] = x
             self.head = self.head - 1
             self.size += 1
-        else:
-            print("error")
 
     def push_back(self, x: Union[int, None]) -> None:
         if self._is_not_max_sized():
             self.dequeue[self.tail] = x
             self.tail = (self.tail + 1) % self.max_size
             self.size += 1
-        else:
-            print("error")
 
     def pop_front(self) -> Union[int, str, None]:
         if not self._is_empty():
@@ -38,7 +46,6 @@ class DequeSized:
             self.head = (self.head + 1) % self.max_size
             self.size -= 1
             return value
-        return "error"
 
     def pop_back(self) -> Union[int, str, None]:
         if not self._is_empty():
@@ -47,7 +54,6 @@ class DequeSized:
             self.tail = (self.tail - 1) % self.max_size
             self.size -= 1
             return value
-        return "error"
 
 
 if __name__ == "__main__":
@@ -55,12 +61,12 @@ if __name__ == "__main__":
     deq_size = int(input())
     deq = DequeSized(deq_size)
     for _ in range(commands_count):
-        command = input().split(" ")
-        if command[0] == "push_front":
-            deq.push_front(int(command[1]))
-        elif command[0] == "push_back":
-            deq.push_back(int(command[1]))
-        elif command[0] == "pop_front":
-            print(deq.pop_front())
-        elif command[0] == "pop_back":
-            print(deq.pop_back())
+        command = input().split()
+        call = getattr(deq, command[0])
+        try:
+            try:
+                call(command[1])
+            except IndexError:
+                print(call())
+        except DeqError as e:
+            print(e)
