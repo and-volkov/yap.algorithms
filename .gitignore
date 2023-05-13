@@ -9,3 +9,6 @@ run.json
 .fleet
 
 *.txt
+test.*
+.fleet
+.ruff_cache
